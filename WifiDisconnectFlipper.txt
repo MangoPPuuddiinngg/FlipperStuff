@@ -1,0 +1,21 @@
+import ctypes
+
+# Load wlanapi library
+wlanapi = ctypes.windll.wlanapi
+
+# Open handle to the wireless interface
+handle = ctypes.c_void_p()
+wlanapi.WlanOpenHandle(2, None, ctypes.byref(handle))
+
+# Enumerate the available wireless interfaces
+interface_guids = (ctypes.c_char_p * 10)()
+wlanapi.WlanEnumInterfaces(handle, None, ctypes.byref(interface_guids))
+
+# Get the first interface GUID
+interface_guid = interface_guids[0]
+
+# Disconnect from the current network
+wlanapi.WlanDisconnect(handle, ctypes.byref(interface_guid), None)
+
+# Close the handle to the wireless interface
+wlanapi.WlanCloseHandle(handle, None)
